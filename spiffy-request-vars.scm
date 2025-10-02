@@ -134,8 +134,10 @@
                                   (or max-content-length content-length)
                                   (request-port (current-request)))))
                        (case (header-value 'content-type headers)
-                         ((application/x-www-form-urlencoded)
-                          (form-urldecode body))
+                         ((application/x-www-form-urlencoded) (form-urldecode body))
+                         ((application/json) `((application/json . ,body)))
+                         ((text/plain `((text/plain . ,body))))
+                         ((multipart/form-data `((multipart/form-data . ,body))))
                          (else #f) ;; not supported
                          ))))))
          (vals (case source
